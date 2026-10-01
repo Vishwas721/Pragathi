@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Syne, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import SmoothScroller from "@/components/layout/SmoothScroller";
-
+import { Analytics } from "@vercel/analytics/next"
 const syne = Syne({
   variable: "--font-syne",
   subsets: ["latin"],
