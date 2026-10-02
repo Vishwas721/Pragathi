@@ -2,110 +2,88 @@
 
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Search, PenTool, Cpu, Rocket } from "lucide-react";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
+import { PhoneCall, ClipboardList, Hammer, Rocket } from "lucide-react";
+import { useReveal } from "@/lib/useReveal";
 
 const steps = [
   {
     num: "01",
-    title: "Discovery & Blueprinting",
-    desc: "We analyze your operational bottlenecks to design a tailored technical architecture that scales with your business.",
-    icon: Search,
+    title: "Free consultation",
+    desc: "A 20–30 minute call to understand your business, your customers and what's slowing you down.",
+    icon: PhoneCall,
   },
   {
     num: "02",
-    title: "UI/UX & Prototyping",
-    desc: "Crafting bespoke, high-converting interfaces that command authority and guide user behavior seamlessly.",
-    icon: PenTool,
+    title: "Proposal & fixed quote",
+    desc: "A clear plan of what we'll build, the timeline and the price, before you commit to anything.",
+    icon: ClipboardList,
   },
   {
     num: "03",
-    title: "Agentic Engineering",
-    desc: "Building the engine. We integrate AI agents, automated scraping tools, and scalable backends into your existing workflows.",
-    icon: Cpu,
+    title: "Build & review",
+    desc: "We build in short rounds and share progress so you can give feedback early and often.",
+    icon: Hammer,
   },
   {
     num: "04",
-    title: "Deployment & Optimization",
-    desc: "Launching your unfair advantage with zero-downtime CI/CD and providing ongoing, proactive optimization.",
+    title: "Launch & support",
+    desc: "We go live, train your team if needed, and stay available for updates and improvements.",
     icon: Rocket,
-  }
+  },
 ];
 
 export default function Process() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const ref = useReveal<HTMLElement>();
+  const lineRef = useRef<HTMLDivElement>(null);
 
+  // Progress line that fills as the visitor scrolls through the steps.
   useEffect(() => {
-    const ctx = gsap.context(() => {
+    const mm = gsap.matchMedia();
+    mm.add("(prefers-reduced-motion: no-preference)", () => {
       gsap.fromTo(
-        itemsRef.current,
-        { y: 30, opacity: 0 },
+        lineRef.current,
+        { scaleX: 0 },
         {
-          y: 0,
-          opacity: 1,
-          duration: 1,
-          stagger: 0.15,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 75%",
-          }
+          scaleX: 1,
+          ease: "none",
+          scrollTrigger: { trigger: lineRef.current, start: "top 85%", end: "top 35%", scrub: 0.6 },
         }
       );
-    }, sectionRef);
-
-    return () => ctx.revert();
+    });
+    return () => mm.revert();
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-24 bg-surface-dim relative border-t border-foreground/5">
-      <div className="container mx-auto px-6 max-w-4xl relative z-10">
-        
-        <div className="mb-16 text-center">
-          <h2 className="text-3xl md:text-5xl font-heading font-bold text-foreground tracking-tight mb-4">
-            The Workflow
+    <section ref={ref} id="process" className="py-24 bg-surface-dim border-y border-foreground/5">
+      <div className="container mx-auto px-6 max-w-6xl">
+        <div className="mb-16 text-center max-w-2xl mx-auto" data-reveal>
+          <p className="text-sm font-bold uppercase tracking-widest text-secondary mb-3">How it works</p>
+          <h2 className="text-3xl md:text-5xl font-heading font-bold tracking-tight mb-5">
+            From first call to launch in four simple steps.
           </h2>
-          <p className="text-lg text-foreground/70 font-medium font-sans max-w-xl mx-auto">
-            A systematic approach to engineering your digital leverage.
-          </p>
+          <p className="text-lg text-foreground/70">No tech jargon. You always know what&apos;s happening and what comes next.</p>
         </div>
 
-        <div className="flex flex-col gap-8">
-          {steps.map((step, index) => {
-            const Icon = step.icon;
-            return (
-              <div 
-                key={step.num}
-                ref={(el) => {
-                  itemsRef.current[index] = el;
-                }}
-                className="bg-white rounded-2xl p-8 md:p-10 border border-foreground/5 flex flex-col md:flex-row gap-8 items-start md:items-center shadow-sm"
-              >
-                <div className="flex-shrink-0 w-16 h-16 rounded-full bg-background flex items-center justify-center border border-foreground/10 text-primary">
-                  <Icon className="w-6 h-6" />
+        <div className="relative lg:pt-10">
+          <div className="hidden lg:block absolute top-[7px] left-8 right-8 h-0.5 bg-foreground/10" aria-hidden="true">
+            <div ref={lineRef} className="h-full bg-gradient-to-r from-primary via-secondary to-accent origin-left" />
+          </div>
+          <ol className="relative grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {steps.map(({ num, title, desc, icon: Icon }) => (
+              <li key={num} data-reveal="flip" className="relative bg-white rounded-2xl p-7 border border-foreground/5 shadow-sm">
+                <span className="hidden lg:block absolute -top-10 left-7 w-4 h-4 rounded-full bg-white border-[3px] border-secondary" aria-hidden="true" />
+                <div className="flex items-center justify-between mb-6">
+                  <span className="w-12 h-12 rounded-full bg-background border border-foreground/10 text-primary flex items-center justify-center">
+                    <Icon className="w-5 h-5" />
+                  </span>
+                  <span className="font-heading font-extrabold text-3xl text-foreground/10">{num}</span>
                 </div>
-                
-                <div className="flex-1">
-                  <div className="flex items-center gap-4 mb-2">
-                    <span className="text-sm font-bold text-primary/50 tracking-widest">{step.num}</span>
-                    <h3 className="text-xl md:text-2xl font-heading font-bold text-foreground">
-                      {step.title}
-                    </h3>
-                  </div>
-                  <p className="text-base text-foreground/70 font-medium font-sans">
-                    {step.desc}
-                  </p>
-                </div>
-              </div>
-            );
-          })}
+                <h3 className="font-heading font-bold text-lg mb-2">{title}</h3>
+                <p className="text-foreground/70 text-[15px] leading-relaxed">{desc}</p>
+              </li>
+            ))}
+          </ol>
         </div>
-
       </div>
     </section>
   );
