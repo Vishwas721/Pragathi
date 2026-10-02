@@ -1,13 +1,14 @@
 @import "tailwindcss";
+@import "lenis/dist/lenis.css";
 
 :root {
-  --background: #F9F7F3; /* Elegant Light Beige / Alabaster */
-  --foreground: #0A1128; /* Sharp Deep Navy */
-  
-  --color-primary: #0F2C59; /* Deep Blue - primary for trust */
-  --color-secondary: #E65F2B; /* Dark Orange - subtle accent */
-  --color-accent: #FFB800; /* Yellow - highlight */
-  
+  --background: #F9F7F3; /* Warm alabaster */
+  --foreground: #0A1128; /* Deep navy */
+
+  --color-primary: #0F2C59; /* Trust blue */
+  --color-secondary: #E65F2B; /* Orange accent */
+  --color-accent: #FFB800; /* Highlight yellow */
+
   --color-surface: #FFFFFF;
   --color-surface-dim: #F2EFE9;
 }
@@ -20,20 +21,37 @@
   --color-accent: var(--color-accent);
   --color-surface: var(--color-surface);
   --color-surface-dim: var(--color-surface-dim);
-  --font-heading: var(--font-syne), "Syne", sans-serif;
-  --font-sans: var(--font-space), "Space Grotesk", sans-serif;
+  --font-heading: var(--font-jakarta), "Plus Jakarta Sans", sans-serif;
+  --font-sans: var(--font-inter), "Inter", sans-serif;
 }
 
-/* Base resets */
-html, body {
+html,
+body {
   background-color: var(--background);
   color: var(--foreground);
   overflow-x: hidden;
-  scroll-behavior: smooth;
   line-height: 1.6;
 }
 
-/* Utility classes for subtle glows */
+/* Native fallback when Lenis is off (reduced motion); Lenis overrides this. */
+html {
+  scroll-behavior: smooth;
+}
+html.lenis {
+  scroll-behavior: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Keep anchored sections clear of the sticky header. */
+section[id] {
+  scroll-margin-top: 80px;
+}
+
 .glow-subtle {
   position: absolute;
   border-radius: 50%;
@@ -43,15 +61,28 @@ html, body {
   opacity: 0.15;
 }
 
-.glass-card {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  box-shadow: 0 4px 20px -2px rgba(10, 17, 40, 0.03);
-}
-
 ::selection {
   background: var(--color-secondary);
   color: #FFFFFF;
+}
+
+/* Motion keyframes */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+@keyframes pop {
+  0% { transform: scale(1.35); color: var(--color-secondary); }
+  100% { transform: scale(1); }
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }
