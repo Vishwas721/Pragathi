@@ -1,22 +1,40 @@
 import type { Metadata } from "next";
-import { Syne, Space_Grotesk } from "next/font/google";
+import { Plus_Jakarta_Sans, Inter } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import SmoothScroller from "@/components/layout/SmoothScroller";
-import { Analytics } from "@vercel/analytics/next"
-const syne = Syne({
-  variable: "--font-syne",
+import { site } from "@/config/site";
+
+const jakarta = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["500", "600", "700", "800"],
 });
 
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "Pragathi Solutions | Premium Web & AI Agency",
-  description: "Architecting Unfair Advantages for Modern Businesses.",
+  metadataBase: new URL(site.url),
+  title: {
+    default: `${site.name} | ${site.tagline}`,
+    template: `%s | ${site.name}`,
+  },
+  description: site.description,
+  openGraph: {
+    type: "website",
+    siteName: site.name,
+    title: `${site.name} | ${site.tagline}`,
+    description: site.description,
+    url: site.url,
+  },
+  twitter: {
+    card: "summary",
+    title: site.name,
+    description: site.description,
+  },
 };
 
 export default function RootLayout({
@@ -25,11 +43,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${syne.variable} ${spaceGrotesk.variable} antialiased`}>
+    <html lang="en" className={`${jakarta.variable} ${inter.variable} antialiased`}>
       <body className="bg-background text-foreground overflow-x-hidden font-sans">
-        <SmoothScroller>
-          {children}
-        </SmoothScroller>
+        <SmoothScroller>{children}</SmoothScroller>
+        <Analytics />
       </body>
     </html>
   );
